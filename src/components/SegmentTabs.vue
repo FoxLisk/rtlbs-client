@@ -36,7 +36,7 @@ export default {
       const openSegment = window.location.hash.slice(1).split('/')[0]
 
       if (segmentsBySlug[openSegment]) {
-        activeTab = _.findIndex(segments, { slug: openSegment }).toString()
+        activeTab = _.findIndex(segments, { slug: openSegment })
       }
     }
     return {
