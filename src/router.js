@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Frontpage from '@/components/Frontpage'
-import PlayerDetail from '@/components/PlayerDetail'
-import PlayerList from '@/components/PlayerList'
-import RoomList from '@/components/RoomList'
-import RoomDetail from '@/components/RoomDetail'
-import Info from '@/components/Info'
+import Frontpage from '@/views/Frontpage'
+import PlayerDetail from '@/views/PlayerDetail'
+import PlayerList from '@/views/PlayerList'
+import RoomList from '@/views/RoomList'
+import RoomDetail from '@/views/RoomDetail'
+import Info from '@/views/Info'
 
 Vue.use(Router)
 

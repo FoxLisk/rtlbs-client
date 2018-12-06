@@ -57,10 +57,6 @@ export default {
   },
   computed: {
     currentSegment () {
-      if (!this.activeTab) {
-        return
-      }
-
       return segments[this.activeTab]
     },
     activeRooms () {
