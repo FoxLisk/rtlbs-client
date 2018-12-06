@@ -13,7 +13,6 @@ export default {
   },
   mounted () {
     this.darkMode = this.$store.state.darkMode
-    console.log(this)
   },
   watch: {
     darkMode: function () {
