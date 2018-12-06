@@ -37,19 +37,8 @@
                 <p>
                   The counters can be toggled on in the LTTPHack menu under Features.
                 </p>
-              </section>
-
-              <section>
-                <h2>Some rules</h2>
                 <p>
-                  - You must use LTTPHack v9 or later. v8 has different timings in quite a few screens, so it would not be comparable.
-                </p>
-                <p>
-                  - When practicing the first overworld screen in a segment (e.g. PoD overworld screen after killing Helma), you should kill the boss and make a save state as Link transitions to the overworld screen. Using a preset to directly start in the overworld screen without a transition, or entering the dungeon and then leaving it again, will produce different framecounts.
-                </p>
-                <p>
-                - Your roomtimes should work as a continuation from your roomtime in the previous screen. For example on the Fake Flippers screen, your frame count will heavily depend on where you transition on the previous screen. Some people dash high in the previous screen and walk down in the Fake Flippers screen, others do it the opposite way, some in between.
-                 This makes some screens faster or slower relative to other players, but the scoring system is smart enough to group these screen together before giving you a rank. <small>(eh, it's not implemented yet, but it will be!)</small>
+                  You must use LTTPHack v9 or later. v8 has different timings in quite a few screens, so it would not be comparable.
                 </p>
               </section>
 

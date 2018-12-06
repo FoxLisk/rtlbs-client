@@ -4,7 +4,7 @@
       v-model="activeTab"
       slot="extension"
       grow
-      @input="handleChangeTab"
+      @change="handleChangeTab"
     >
       <v-tabs-slider :color="sliderColor"></v-tabs-slider>
       <v-tab v-for="segment in allSegments" :key="segment.slug">
