@@ -26,13 +26,13 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    setToken ({commit}, jwt) {
+    setToken ({ commit }, jwt) {
       commit('setToken', jwt)
     },
-    setUser ({commit}, user) {
+    setUser ({ commit }, user) {
       commit('setUser', user)
     },
-    setDarkMode ({commit}, darkMode) {
+    setDarkMode ({ commit }, darkMode) {
       commit('setDarkMode', darkMode)
     }
   }
