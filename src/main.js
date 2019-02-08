@@ -7,6 +7,9 @@ import 'vuetify/dist/vuetify.min.css'
 import { sync } from 'vuex-router-sync'
 import { VueEditor } from 'vue2-editor'
 import MugenScroll from 'vue-mugen-scroll'
+import Highcharts from 'highcharts'
+import HighchartsVue from 'highcharts-vue'
+import stockInit from 'highcharts/modules/stock'
 import LeaderBoards from '@/components/LeaderBoards'
 import store from './store'
 import App from './App'
@@ -21,6 +24,9 @@ Vue.component('mugen-scroll', MugenScroll)
 Vue.config.productionTip = false
 
 Vue.use(Vuetify)
+Vue.use(HighchartsVue)
+
+stockInit(Highcharts)
 
 if (config.TRACKING_ID) {
   Vue.use(VueAnalytics, {

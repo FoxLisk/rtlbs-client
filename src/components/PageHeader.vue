@@ -8,6 +8,7 @@
       <v-toolbar-items>
         <v-btn flat :to="{ name: 'player-list' }">Players</v-btn>
         <v-btn flat :to="{ name: 'room-list' }">Rooms</v-btn>
+        <v-btn flat :to="{ name: 'src' }">SRC</v-btn>
         <v-btn flat :to="{ name: 'info' }">Info</v-btn>
       </v-toolbar-items>
 

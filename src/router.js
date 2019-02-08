@@ -5,6 +5,7 @@ import PlayerDetail from '@/views/PlayerDetail'
 import PlayerList from '@/views/PlayerList'
 import RoomList from '@/views/RoomList'
 import RoomDetail from '@/views/RoomDetail'
+import SRCDetail from '@/views/SRCDetail'
 import Info from '@/views/Info'
 
 Vue.use(Router)
@@ -41,6 +42,11 @@ export default new Router({
       path: '/info/',
       name: 'info',
       component: Info
+    },
+    {
+      path: '/src-stats/',
+      name: 'src',
+      component: SRCDetail
     }
   ]
 })
