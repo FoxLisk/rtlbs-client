@@ -2,7 +2,7 @@
   <div>
     <v-container grid-list-sm>
       <v-layout>
-        <v-flex offset-lg3 lg6 offset-sm1 sm10 offset-md2 md8 offset-xs0 xs12>
+        <v-flex offset-lg1 lg10 offset-md0 md12>
           <v-card height="100%">
             <v-card-title>
               <h2>Speedrun.com Stats</h2>
@@ -10,7 +10,7 @@
             <v-divider />
             <v-card-text>
               <v-progress-linear v-if="loading" :indeterminate="true"></v-progress-linear>
-              <highcharts :options="options"></highcharts>
+              <highcharts :options="runsOptions"></highcharts>
             </v-card-text>
           </v-card>
         </v-flex>
@@ -29,7 +29,7 @@ export default {
   data () {
     return {
       loading: false,
-      options: {
+      runsOptions: {
         rangeSelector: {
           buttons: [{
             type: 'month',
@@ -74,18 +74,16 @@ export default {
           }
         }, {
           title: {
-            text: '',
-            opposite: true
-          }
+            text: ''
+          },
+          opposite: true
         }],
         xAxis: {
           type: 'datetime',
           crosshair: true
         },
         plotOptions: {
-          column: {
-            pointPadding: 0.2,
-            borderWidth: 0
+          area: {
           }
         },
         series: [{
@@ -111,9 +109,9 @@ export default {
       const data = (await StatsService.getStats()).data
       this.loading = false
 
-      this.options.series[0].data = data.total
-      this.options.series[1].data = data.runs
-      this.options.series[2].data = data['new']
+      this.runsOptions.series[0].data = data.total
+      this.runsOptions.series[1].data = data.runs
+      this.runsOptions.series[2].data = data['new']
     }
   }
 }
