@@ -10,8 +10,14 @@
             <v-divider />
             <v-card-text>
               <v-progress-linear v-if="loading" :indeterminate="true"></v-progress-linear>
-              <div id="range-selector">
-              </div>
+              <v-select
+                :items="categories"
+                :item-text="cat => cat.name + ' (' + cat.type + ')'"
+                item-value="id"
+                v-model="category"
+                @change="fetchStats"
+                id="category-selector"
+                label="Category"></v-select>
               <highcharts :options="runsOptions"></highcharts>
             </v-card-text>
           </v-card>
@@ -31,11 +37,16 @@ import StatsService from '@/services/StatsService'
 
 export default {
   mounted () {
-    this.fetch()
+    this.fetchCats()
+    this.fetchStats(this.category)
   },
   data () {
     return {
       loading: false,
+      categories: [
+        { id: 'all', name: 'All', type: 'all' }
+      ],
+      category: 'all',
       // Runs
       runsOptions: {
         rangeSelector: {
@@ -53,6 +64,11 @@ export default {
         },
         chart: {
           type: 'area'
+        },
+        plotOptions: {
+          area: {
+            step: true
+          }
         },
         title: { text: 'Runs' },
         yAxis: [
@@ -94,19 +110,27 @@ export default {
     }
   },
   methods: {
-    fetch: async function () {
+    fetchCats: async function () {
+      const cats = (await StatsService.getCategories()).data
+      cats.forEach(cat => {
+        this.categories.push(cat)
+      })
+    },
+    fetchStats: async function (category) {
       this.loading = true
-      const data = (await StatsService.getStats()).data
+      const data = (await StatsService.getStats(category)).data
       this.loading = false
 
       this.runsOptions.series[0].data = data.total
       this.runsOptions.series[1].data = data.runs
       this.runsOptions.series[2].data = data['new']
 
+      this.barOptions.xAxis.categories.splice(0)
       data.pbStats.pbs.forEach(pb => {
         this.barOptions.xAxis.categories.push(pb)
       })
 
+      this.barOptions.series.splice(0)
       data.pbStats.data.forEach(stats => {
         const year = stats.shift()
         this.barOptions.series.push({
