@@ -287,6 +287,11 @@ export default {
   height: 2.4em !important;
 }
 
+.tablestats .v-table__overflow {
+  overflow-y: auto;
+  max-height: 352px;
+}
+
 .lbs .v-table__overflow {
   overflow-y: auto;
   max-height: 1024px;
