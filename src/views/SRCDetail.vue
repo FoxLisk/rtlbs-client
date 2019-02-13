@@ -14,9 +14,8 @@
                 :items="categories"
                 :item-text="cat => cat.name + ' (' + cat.type + ')'"
                 item-value="id"
-                v-model="category"
+                v-model="runsCategory"
                 @change="fetchStats"
-                id="category-selector"
                 label="Category"></v-select>
               <highcharts :options="runsOptions"></highcharts>
             </v-card-text>
@@ -32,18 +31,18 @@
         <v-flex lg5 sm12>
           <div class="elevation-1">
             <v-tabs
-              v-model="activeTab"
+              v-model="tblStatsActiveTab"
               slot="extension"
             >
               <v-tabs-slider :color="sliderColor"></v-tabs-slider>
-              <v-tab v-for="tab in allTabs" :key="'tab-' + tab.key">
+              <v-tab v-for="tab in tblStatsTabs" :key="'tab-' + tab.key">
                 {{ tab.name }}
               </v-tab>
             </v-tabs>
             <v-data-table
-              v-if="tableData"
-              :headers="tableHeaders[activeTab]"
-              :items="tableData[allTabs[activeTab].key]"
+              v-if="tblStatsData"
+              :headers="tblStatsHeaders[tblStatsActiveTab]"
+              :items="tblStatsData[tblStatsTabs[tblStatsActiveTab].key]"
               hide-actions
               class="tablestats"
             >
@@ -53,6 +52,66 @@
               </template>
             </v-data-table>
           </div>
+        </v-flex>
+      </v-layout>
+      <v-layout row wrap>
+        <v-flex offset-lg1 lg10 offset-md0 md12 v-if="lbsData">
+          <v-card>
+            <v-card-title>
+              Leaderboards
+            </v-card-title>
+            <v-divider />
+            <v-card-text>
+              <v-layout>
+                <v-flex xs6>
+                  <v-select
+                    :items="categories"
+                    :item-text="cat => cat.name + ' (' + cat.type + ')'"
+                    item-value="id"
+                    v-model="lbsCategory"
+                    @change="fetchLeaderboards"
+                    label="Category"></v-select>
+                </v-flex>
+                <v-flex xs6>
+                  <v-menu
+                    v-model="lbsMenu"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    lazy
+                    transition="scale-transition"
+                    offset-y
+                    full-width
+                    min-width="290px"
+                  >
+                    <v-text-field
+                      slot="activator"
+                      v-model="lbsDate"
+                      label="Choose date"
+                      prepend-icon="event"
+                      readonly
+                    ></v-text-field>
+                    <v-date-picker
+                      v-model="lbsDate"
+                      @input="lbsMenu = false; fetchLeaderboards(lbsCategory)"
+                    ></v-date-picker>
+                  </v-menu>
+                </v-flex>
+              </v-layout>
+
+              <v-data-table
+                :headers="lbsHeaders"
+                :items="lbsData"
+                hide-actions
+                class="lbs"
+              >
+                <template slot="items" slot-scope="props">
+                  <td>{{ props.index + 1 }}</td>
+                  <td>{{ props.item.player }}</td>
+                  <td>{{ props.item.time }}</td>
+                </template>
+              </v-data-table>
+            </v-card-text>
+          </v-card>
         </v-flex>
       </v-layout>
     </v-container>
@@ -65,12 +124,25 @@ import StatsService from '@/services/StatsService'
 export default {
   mounted () {
     this.fetchCats()
-    this.fetchStats(this.category)
+    this.fetchStats(this.runsCategory)
+    this.fetchLeaderboards(this.lbsCategory)
   },
   data () {
     return {
-      activeTab: 0,
-      allTabs: [{
+      // Leaderboards
+      lbsHeaders: [
+        { text: '#', sortable: false, width: '0%' },
+        { text: 'Player', sortable: false },
+        { text: 'Time', sortable: false }
+      ],
+      lbsData: null,
+      lbsCategory: '013xwzr1',
+      lbsDate: new Date().toISOString().substr(0, 10),
+      lbsMenu: false,
+
+      // Table stats
+      tblStatsActiveTab: 0,
+      tblStatsTabs: [{
         key: 'pbs',
         name: 'Players'
       }, {
@@ -83,19 +155,22 @@ export default {
         key: 'moderators',
         name: 'Moderators'
       }],
-      tableHeaders: [
-        [{ text: 'Player', sortable: false, width: '50%' }, { text: 'Runs', sortable: false }],
-        [{ text: 'Country', sortable: false, width: '50%' }, { text: 'Runs', sortable: false }],
+      tblStatsHeaders: [
+        [{ text: 'Player', sortable: false, width: '50%' }, { text: 'Verified runs', sortable: false }],
+        [{ text: 'Country', sortable: false, width: '50%' }, { text: 'Verified runs', sortable: false }],
         [{ text: 'Player', sortable: false, width: '50%' }, { text: 'Categories', sortable: false }],
         [{ text: 'Moderator', sortable: false, width: '50%' }, { text: 'Moderated runs', sortable: false }]
       ],
-      tableData: null,
+      tblStatsData: null,
+
+      // General
       loading: false,
       categories: [
         { id: 'all', name: 'All', type: 'all' }
       ],
-      category: 'all',
+
       // Runs
+      runsCategory: 'all',
       runsOptions: {
         rangeSelector: {
           buttons: [
@@ -136,7 +211,7 @@ export default {
           stacked: true
         },
         title: {
-          text: 'Milestone (NMG)'
+          text: 'Milestones (NMG)'
         },
         yAxis: {
           title: {
@@ -187,7 +262,12 @@ export default {
       })
 
       // Table
-      this.tableData = data.table
+      this.tblStatsData = data.table
+    },
+    fetchLeaderboards: async function (category) {
+      const date = this.lbsDate
+      const data = (await StatsService.getLeaderboards(category, date)).data
+      this.lbsData = data.lbs
     }
   },
   computed: {
@@ -205,5 +285,10 @@ export default {
 
 .tablestats tbody td {
   height: 2.4em !important;
+}
+
+.lbs .v-table__overflow {
+  overflow-y: auto;
+  max-height: 1024px;
 }
 </style>
