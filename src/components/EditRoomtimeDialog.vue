@@ -195,7 +195,7 @@ export default {
     this.$refs.uploadPanel.$el.onclick = (e) => {
       let header = false
       e.composedPath().forEach(el => {
-        if (el.classList && el.classList.contains('expansion-panel__header')) {
+        if (el.classList && el.classList.contains('v-expansion-panel__header')) {
           header = true
         }
       })
