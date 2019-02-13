@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-container grid-list-sm>
-      <v-layout>
+    <v-container grid-list-xl>
+      <v-layout row wrap>
         <v-flex offset-lg1 lg10 offset-md0 md12>
           <v-card height="100%">
             <v-card-title>
@@ -23,9 +23,36 @@
           </v-card>
         </v-flex>
       </v-layout>
-      <v-layout ma-3>
-        <v-flex offset-lg1 lg5 offset-md0 md6>
-          <highcharts :options="barOptions"></highcharts>
+      <v-layout row wrap>
+        <v-flex offset-lg1 lg5 offset-sm0 sm12>
+          <div class="elevation-1">
+            <highcharts :options="barOptions"></highcharts>
+          </div>
+        </v-flex>
+        <v-flex lg5 sm12>
+          <div class="elevation-1">
+            <v-tabs
+              v-model="activeTab"
+              slot="extension"
+            >
+              <v-tabs-slider :color="sliderColor"></v-tabs-slider>
+              <v-tab v-for="tab in allTabs" :key="'tab-' + tab.key">
+                {{ tab.name }}
+              </v-tab>
+            </v-tabs>
+            <v-data-table
+              v-if="tableData"
+              :headers="tableHeaders[activeTab]"
+              :items="tableData[allTabs[activeTab].key]"
+              hide-actions
+              class="tablestats"
+            >
+              <template slot="items" slot-scope="props">
+                <td>{{ props.item.key }}</td>
+                <td>{{ props.item.value }}</td>
+              </template>
+            </v-data-table>
+          </div>
         </v-flex>
       </v-layout>
     </v-container>
@@ -42,6 +69,27 @@ export default {
   },
   data () {
     return {
+      activeTab: 0,
+      allTabs: [{
+        key: 'pbs',
+        name: 'Players'
+      }, {
+        key: 'country',
+        name: 'Countries'
+      }, {
+        key: 'categories',
+        name: 'Categories'
+      }, {
+        key: 'moderators',
+        name: 'Moderators'
+      }],
+      tableHeaders: [
+        [{ text: 'Player', sortable: false, width: '50%' }, { text: 'Runs', sortable: false }],
+        [{ text: 'Country', sortable: false, width: '50%' }, { text: 'Runs', sortable: false }],
+        [{ text: 'Player', sortable: false, width: '50%' }, { text: 'Categories', sortable: false }],
+        [{ text: 'Moderator', sortable: false, width: '50%' }, { text: 'Moderated runs', sortable: false }]
+      ],
+      tableData: null,
       loading: false,
       categories: [
         { id: 'all', name: 'All', type: 'all' }
@@ -65,11 +113,6 @@ export default {
         chart: {
           type: 'area'
         },
-        plotOptions: {
-          area: {
-            step: true
-          }
-        },
         title: { text: 'Runs' },
         yAxis: [
           { title: { text: 'total' } },
@@ -80,9 +123,9 @@ export default {
           crosshair: true
         },
         series: [
-          { name: 'Total PBs', data: [], yAxis: 0 },
-          { name: 'New PBs', data: [], yAxis: 1 },
-          { name: 'New players', data: [], yAxis: 1 }
+          { name: 'Total PBs', data: [], yAxis: 0, step: false },
+          { name: 'New PBs', data: [], yAxis: 1, step: true },
+          { name: 'New players', data: [], yAxis: 1, step: true }
         ],
         credits: false
       },
@@ -93,7 +136,7 @@ export default {
           stacked: true
         },
         title: {
-          text: 'First-time milestone (NMG)'
+          text: 'Milestone (NMG)'
         },
         yAxis: {
           title: {
@@ -105,7 +148,8 @@ export default {
           categories: [],
           crosshair: true
         },
-        series: []
+        series: [],
+        credits: false
       }
     }
   },
@@ -121,51 +165,45 @@ export default {
       const data = (await StatsService.getStats(category)).data
       this.loading = false
 
-      this.runsOptions.series[0].data = data.total
-      this.runsOptions.series[1].data = data.runs
-      this.runsOptions.series[2].data = data['new']
+      // Runs
+      this.runsOptions.series[0].data = data.run.total
+      this.runsOptions.series[1].data = data.run.runs
+      this.runsOptions.series[2].data = data.run['new']
 
+      // NMG
       this.barOptions.xAxis.categories.splice(0)
-      data.pbStats.pbs.forEach(pb => {
+      data.nmg.pbs.forEach(pb => {
         this.barOptions.xAxis.categories.push(pb)
       })
 
+      // Milestones
       this.barOptions.series.splice(0)
-      data.pbStats.data.forEach(stats => {
+      data.nmg.data.forEach(stats => {
         const year = stats.shift()
         this.barOptions.series.push({
           name: year,
           data: stats
         })
       })
+
+      // Table
+      this.tableData = data.table
+    }
+  },
+  computed: {
+    sliderColor () {
+      return this.$store.state.darkMode ? 'blue' : 'pink'
     }
   }
 }
 </script>
 
-<style scoped>
-.time-since {
-  position: absolute;
-  right: 12px;
-  top: 14px;
+<style>
+.tablestats thead tr:first-child {
+    height: 2.9em !important;
 }
 
-.rt-summary .stat {
-  display: inline-block;
-  margin-left: 4px;
-  margin-right: 4px;
-}
-
-.rt-summary .stat:first-child {
-  margin-left: 0px;
-}
-
-.hidden-sm-and-up .stat {
-  margin-left: 1px;
-  margin-right: 1px;
-}
-
-.roomtime {
-  padding-right: 90px;
+.tablestats tbody td {
+  height: 2.4em !important;
 }
 </style>
