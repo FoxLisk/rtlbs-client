@@ -175,11 +175,7 @@ export default {
         rangeSelector: {
           buttons: [
             { type: 'month', count: 3, text: '3m' },
-            { type: 'month', count: 6, text: '6m' },
             { type: 'year', count: 1, text: '1y' },
-            { type: 'year', count: 2, text: '2y' },
-            { type: 'year', count: 3, text: '3y' },
-            { type: 'year', count: 4, text: '4y' },
             { type: 'all', text: 'All' }
           ],
           enabled: true,
