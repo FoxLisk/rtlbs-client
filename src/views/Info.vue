@@ -13,7 +13,22 @@
                 <h2>How scoring works</h2>
                 <p>When you submit a roomtime, you will be ranked against other people who have submitted roomtimes for that room. This rank is then converted into a score. In order from rank 1 to 10 you will get the following scores: 50, 40, 35, 30, 25, 20, 16, 12, 8, 4.</p>
                 <p>Your global rank (your position on the leaderboard) is dependent on your total score for all rooms.</p>
-                <p>If multiple people does a room equally fast, they will get the same rank and score.</p>
+                <p>If multiple people does a room equally fast, they will get the same rank and score as if they were alone on that spot.</p>
+              </section>
+
+              <section>
+                <h2>Rules</h2>
+                <p>
+                  The main idea behind this site was to have a place to share and compare strats. Since its release, multiple people have used the site to learn more about the game.
+                  However, a secondary reason was to have a place where people could compete in room times. So that competition can be done in a fair way, here's a few ground rules:
+                </p>
+                <ul>
+                  <li>Use common sense.</li>
+                  <li>Memestrats are allowed. But don't skip arrows before grabbing the bow, for example.</li>
+                  <li>Don't fabricate a better room time by killing all the enemies in a room before doing attempts etc.</li>
+                  <li>Don't start from presets. Use a preset to get to some place, then make a save state in the previous room or during the transition.</li>
+                  <li>For screens that comes after a boss kill, you need to kill the boss for the counter to be correct. Starting from preset or entering the Dungeon and transitioning back will give different room times.</li>
+                </ul>
               </section>
 
               <section>
@@ -35,7 +50,7 @@
                   <code>idle</code> (not required) tells you how fast you mashed through text or how optimal your menues were. The higher the number, the less optimal you were.
                 </p>
                 <p>
-                  The counters can be toggled on in the LTTPHack menu under Features.
+                  The counters can be toggled on in the LTTPHack menu under Counters (v10) or Features (v9 or previous versions).
                 </p>
                 <p>
                   You must use LTTPHack v9 or later. v8 has different timings in quite a few screens, so it would not be comparable.
